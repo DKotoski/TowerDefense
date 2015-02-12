@@ -157,7 +157,7 @@
             };
         }
         //end enemy constructor
-        var towers = [new Tower(new PIXI.Sprite(PIXI.Texture.fromImage("Assets/t1.png")), 64 * 4, 64 * 3,85), new Tower(new PIXI.Sprite(PIXI.Texture.fromImage("Assets/t2.png")), 64 * 7, 64 * 5,245), new Tower(new PIXI.Sprite(PIXI.Texture.fromImage("Assets/t3.png")), 64 * 6, 64 * 3,300)];
+        var towers = [new Tower(new PIXI.Sprite(PIXI.Texture.fromImage("Assets/t1.png")), 64 * 4, 64 * 3, 85), new Tower(new PIXI.Sprite(PIXI.Texture.fromImage("Assets/t2.png")), 64 * 7, 64 * 5, 245), new Tower(new PIXI.Sprite(PIXI.Texture.fromImage("Assets/t3.png")), 64 * 6, 64 * 3, 300), new Tower(new PIXI.Sprite(PIXI.Texture.fromImage("Assets/t3.png")), 64 * 6, 64 * 7, 300)];
         
         var stageMatrix = [
             [1, 1, 1, 1, 1, 1, 1, 1, 0, 1],
@@ -196,7 +196,7 @@
                 stage.addChild(texture);
             }
         }
-        for (var i = 0; i < 3; i++) {
+        for (var i = 0; i < towers.length; i++) {
             stage.addChild(towers[i].sprite);
         }
 
