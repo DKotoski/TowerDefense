@@ -33,7 +33,7 @@
         var renderer = new PIXI.WebGLRenderer(920, 640);
         $("#daGame").append(renderer.view);
         //setting stage
-        var stage = new PIXI.Stage;
+        var stage = new PIXI.Stage(0x97c56e, true);
 
         //setting sprites
         //towers
@@ -83,7 +83,7 @@
                     if(!stage.contains(tower.target.sprite)){
                         tower.target=null;
                         tower.targetIndex = -1;
-                        console.log("vleze");
+                        //console.log("vleze");
                         return;
                     }            
                     
@@ -97,12 +97,12 @@
                 tower.getTarget(enemies.length-1);
                 if(tower.target==null) return;
                 var toRemove = tower.target.sprite;
-                console.log(tower.shootSpeed);
+                //console.log(tower.shootSpeed);
                 enemies.splice(tower.targetIndex,1);
                     if(stage.contains(toRemove)){
                         stage.removeChild(toRemove);
                     }
-                    console.log(tower.targetIndex);
+                    //console.log(tower.targetIndex);
                     tower.target=null;
                     tower.targetIndex = -1;
                     return;                    
@@ -157,8 +157,72 @@
             };
         }
         //end enemy constructor
+
+        // UI ELEMENT CONSTRUCTOR
+        function UIElement(sprite, x, y) {
+            var sprite = new PIXI.Sprite(PIXI.Texture.fromImage(sprite));
+            sprite.setInteractive(true);
+            this.Sprite = sprite;
+            this.x = x;
+            this.y = y;
+            this.sprite.position.x = x - 32;
+            this.sprite.position.y = y - 32;
+            this.sprite.pivot.x = 32;
+            this.sprite.pivot.y = 32;
+            this.spriteLocation = sprite;
+            var element = this;
+            this.Sprite.mousedown = function(data)
+            {
+                this.data = data;
+                this.alpha = 0.5;
+                this.dragging = true;
+            };
+            this.Sprite.mouseup = bunny.mouseupoutside = bunny.touchend = bunny.touchendoutside = function(data)
+            {
+                this.alpha = 1
+                this.dragging = false;
+                // set the interaction data to null
+                this.data = null;
+            };
+        }
+        //
         var towers = [new Tower(new PIXI.Sprite(PIXI.Texture.fromImage("Assets/t1.png")), 64 * 4, 64 * 3, 85), new Tower(new PIXI.Sprite(PIXI.Texture.fromImage("Assets/t2.png")), 64 * 7, 64 * 5, 245), new Tower(new PIXI.Sprite(PIXI.Texture.fromImage("Assets/t3.png")), 64 * 6, 64 * 3, 300), new Tower(new PIXI.Sprite(PIXI.Texture.fromImage("Assets/t3.png")), 64 * 6, 64 * 7, 300)];
         
+        var bunny = new PIXI.Sprite(PIXI.Texture.fromImage("Assets/t1.png"));
+        bunny.position.x = 64 * 12;
+        bunny.position.y = 64 * 2;
+        bunny.interactive = true;
+        
+        bunny.mousedown = bunny.touchstart = function (data) {
+            this.data = data;
+            this.alpha = 0.5;
+            this.dragging = true;
+        };
+
+        bunny.mouseup = bunny.mouseupoutside = bunny.touchend = bunny.touchendoutside = function (data) {
+            this.alpha = 1
+            this.dragging = false;
+            // set the interaction data to null
+            
+            var newPosition = this.data.getLocalPosition(this.parent);
+            //proverka dali e na treva po pozadinskata matrica!
+            this.position.x = Math.floor(newPosition.x / 64) * 64;;
+            this.position.y = Math.floor(newPosition.y / 64) * 64;
+           // var tmpTower = new Tower(new PIXI.Sprite(PIXI.Texture.fromImage("Assets/t1.png")), newPosition.x%64 * 64, newPosition.y%64 * 64, 85);
+           // towers.push(tmpTower);
+            //stage.addChild(tmpTower);
+            this.data = null;
+        };
+
+        bunny.mousemove = bunny.touchmove = function (data) {
+            if (this.dragging) {
+                // need to get parent coords..
+                var newPosition = this.data.getLocalPosition(this.parent);
+                this.position.x = newPosition.x;
+                this.position.y = newPosition.y;
+            }
+        }
+
         var stageMatrix = [
             [1, 1, 1, 1, 1, 1, 1, 1, 0, 1],
             [1, 1, 1, 1, 0, 0, 0, 0, 0, 1],
@@ -200,7 +264,7 @@
             stage.addChild(towers[i].sprite);
         }
 
-        
+        stage.addChild(bunny);
         
         
         var enemies = new Array();
