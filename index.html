@@ -104,6 +104,7 @@
                     //console.log(tower.targetIndex);
                     tower.target=null;
                     tower.targetIndex = -1;
+                    money += 10;
                     return;                    
             }
             
@@ -158,7 +159,7 @@
         //end enemy constructor
 
         // UI ELEMENT CONSTRUCTOR
-        function UIElement(sprite, x, y) {
+        function UIElement(sprite, x, y, price) {
             this.sprite = new PIXI.Sprite(PIXI.Texture.fromImage(sprite));            
             this.x = x;
             this.y = y;
@@ -167,8 +168,17 @@
             this.sprite.pivot.x = 32;
             this.sprite.pivot.y = 32;
             this.spriteLocation = sprite;
+            this.price = price;
             var element = this;
-            element.sprite.interactive = true;
+            this.dim = function () {
+                element.sprite.alpha = 0.5;
+                element.sprite.interactive = false;
+            }
+            this.dimOut = function () {
+                element.sprite.alpha = 1;
+                element.sprite.interactive = true;
+            }
+           
             element.sprite.mousedown = element.sprite.touchstart = function (data) {
                 console.log("mousedown");
                 this.data = data;
@@ -179,18 +189,24 @@
                 this.alpha = 1
                 this.dragging = false;            
                 var newPosition = this.data.getLocalPosition(this.parent);
-               if (stageMatrix[Math.floor(newPosition.y / 64)][Math.floor(newPosition.x / 64)]===1){
-                    var tmpX = (Math.floor(newPosition.x / 64)+1) * 64;
-                    var tmpY = (Math.floor(newPosition.y / 64)+1) * 64;
-                    var t = new Tower(new PIXI.Sprite(PIXI.Texture.fromImage(element.spriteLocation)), tmpX, tmpY,100);
-                    towers.push(t);
-                    stage.addChild(t.sprite);
-                    this.position.x= x - 32;
-                    this.position.y= y - 32;
-               }else{
-                    this.position.x= x - 32;
-                    this.position.y= y - 32;
-               }
+                if (money >= element.price) {
+                    if (stageMatrix[Math.floor(newPosition.y / 64)][Math.floor(newPosition.x / 64)] === 1) {
+                        var tmpX = (Math.floor(newPosition.x / 64) + 1) * 64;
+                        var tmpY = (Math.floor(newPosition.y / 64) + 1) * 64;
+                        var t = new Tower(new PIXI.Sprite(PIXI.Texture.fromImage(element.spriteLocation)), tmpX, tmpY, 100);
+                        towers.push(t);
+                        stage.addChild(t.sprite);
+                        money -= element.price;
+                        this.position.x = x - 32;
+                        this.position.y = y - 32;
+                    } else {
+                        this.position.x = x - 32;
+                        this.position.y = y - 32;
+                    }
+                } else {
+                    this.position.x = x - 32;
+                    this.position.y = y - 32;
+                }
                 this.data = null;
         };
         element.sprite.mousemove = element.sprite.touchmove = function (data) {
@@ -205,7 +221,7 @@
         //
         var towers = [new Tower(new PIXI.Sprite(PIXI.Texture.fromImage("Assets/t1.png")), 64 * 4, 64 * 3, 85), new Tower(new PIXI.Sprite(PIXI.Texture.fromImage("Assets/t2.png")), 64 * 7, 64 * 5, 245), new Tower(new PIXI.Sprite(PIXI.Texture.fromImage("Assets/t3.png")), 64 * 6, 64 * 3, 300), new Tower(new PIXI.Sprite(PIXI.Texture.fromImage("Assets/t3.png")), 64 * 6, 64 * 7, 300)];
 
-        var uiElements = [new UIElement("Assets/t1.png",64*12,64*2), new UIElement("Assets/t2.png",64*12,64*4), new UIElement("Assets/t3.png",64*12,64*6)];
+        var uiElements = [new UIElement("Assets/t1.png",64*12,64*2,100), new UIElement("Assets/t2.png",64*12,64*4,200), new UIElement("Assets/t3.png",64*12,64*6,300)];
         
         var stageMatrix = [
             [1, 1, 1, 1, 1, 1, 1, 1, 0, 1],
@@ -265,17 +281,31 @@
         
             
         var health = 100;
+        var money = 200;
         
         
-        var text = new PIXI.Text(health, {font:"50px Arial", fill:"red"});
+        var text = new PIXI.Text(health, { font: "50px Arial", fill: "red" });
+        text.position.x = 64 * 10;
         stage.addChild(text);
+        var textMoney = new PIXI.Text(money, { font: "50px Arial", fill: "red" });
+        textMoney.position.x = 64 * 10;
+        textMoney.position.y = 64 * 8;
+        stage.addChild(textMoney);
         var timer = 0;
         //the animation function
         requestAnimationFrame(animate);
         function animate() {
+            for (var i = 0 ; i < uiElements.length; i++) {
+                if (uiElements[i].price <= money) {
+                    uiElements[i].dimOut();
+                } else {
+                    uiElements[i].dim();
+                }
+            }
             timer++;
             timer=timer%1000;
-            text.setText(health);
+            text.setText("Health: " + health);
+            textMoney.setText("Money: " + money);
             for (var i = 0; i < towers.length; i++) {
                 towers[i].getTarget(enemies.length-1);
             }
