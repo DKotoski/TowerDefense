@@ -96,15 +96,18 @@
                 tower.getTarget(enemies.length-1);
                 if(tower.target==null) return;
                 var toRemove = tower.target.sprite;
+                var bullet = new Bullet(tower.sprite.position.x, tower.sprite.position.y, tower.target,tower);
+                bullets.push(bullet);
+                stage.addChild(bullet.sprite);
                 //console.log(tower.shootSpeed);
-                enemies.splice(tower.targetIndex,1);
+               /* enemies.splice(tower.targetIndex,1);
                     if(stage.contains(toRemove)){
                         stage.removeChild(toRemove);
                     }
                     //console.log(tower.targetIndex);
                     tower.target=null;
                     tower.targetIndex = -1;
-                    money += 10;
+                    money += 10;*/
                     return;                    
             }
             
@@ -218,11 +221,87 @@
         }
         
         }
-        //
+        //END UI CONSTRUCTOR
+
+        //BULLET CONSTRUCTOR
+        function Bullet(x, y, target, tower) {
+            this.traveling = true;
+            this.tower = tower;
+            this.x = x;
+            this.y = y;
+            this.target = target;
+            this.sprite = new PIXI.Sprite(PIXI.Texture.fromImage("Assets/bullet.png"));
+            var bullet = this;
+            this.rotate = function (angle) {
+                bullet.sprite.rotation = angle;
+            };
+           
+            this.setSpriteLocation = function () {
+                bullet.sprite.position.x = bullet.x;
+                bullet.sprite.position.y = bullet.y;
+            }
+            bullet.setSpriteLocation();
+            this.checkTarget = function () {
+                if (!bullet.target) {
+                    bullet.target = bullet.tower.target;
+                }
+            }
+            this.destroy = function () {
+                if (stage.contains(bullet.sprite)) {
+                    stage.removeChild(bullet.sprite);
+                }
+                if (bullets.indexOf(tower) > -1) {
+                    bullets.splice(bullets.indexOf(tower), 1);
+                }
+            }
+            this.travel = function () {
+                if(bullet.traveling)
+                {
+                    var dFromT = Math.sqrt((bullet.sprite.position.x - bullet.tower.sprite.position.x) * (bullet.sprite.position.x - bullet.tower.sprite.position.x)+(bullet.sprite.position.y - bullet.tower.sprite.position.y)*(bullet.sprite.position.y - bullet.tower.sprite.position.y))
+                    if (dFromT > bullet.tower.range + 50) {
+                        bullet.destroy();
+                        return;
+                    }
+                    if (bullets.indexOf(bullet) == -1) {
+                        bullet.destroy();
+                        return;
+                    }
+                    if (!bullet.tower.target) {
+                        return;
+                    }
+                    var tan = (bullet.target.y - bullet.y) / (bullet.target.x - bullet.x)
+                    var angle = Math.atan(tan);
+                    if (bullet.target.x < bullet.x) angle += 3.14;
+                    bullet.rotate(angle);
+                    if (bullet.target.sprite.position.x < (bullet.x + 2) && bullet.target.sprite.position.x > (bullet.x - 2) && bullet.target.sprite.position.y < (bullet.y + 2) && bullet.target.sprite.position.y > (bullet.y - 2)) {
+                        enemies.splice(bullet.tower.targetIndex, 1);
+                        if (stage.contains(bullet.tower.target.sprite)) {
+                            stage.removeChild(bullet.tower.target.sprite);
+                        }
+                        bullet.tower.target = null;
+                        bullet.tower.targetIndex = -1;
+                        money += 10;
+                        bullet.traveling = false;
+                        bullet.destroy();                        
+                        return;
+                    }
+
+                    var moveByY = 4;
+                    var moveByX = 4;
+                    if (bullet.target.sprite.position.y < bullet.y) moveByY *= -1;
+                    if (bullet.target.sprite.position.x < bullet.x) moveByX *= -1;
+                    bullet.y += moveByY;
+                    bullet.x += moveByX;
+                    bullet.setSpriteLocation();
+                }
+            }
+        }
+        //END BULLET CONSTRUCTOR
         var towers = [new Tower(new PIXI.Sprite(PIXI.Texture.fromImage("Assets/t1.png")), 64 * 4, 64 * 3, 85), new Tower(new PIXI.Sprite(PIXI.Texture.fromImage("Assets/t2.png")), 64 * 7, 64 * 5, 245), new Tower(new PIXI.Sprite(PIXI.Texture.fromImage("Assets/t3.png")), 64 * 6, 64 * 3, 300), new Tower(new PIXI.Sprite(PIXI.Texture.fromImage("Assets/t3.png")), 64 * 6, 64 * 7, 300)];
 
         var uiElements = [new UIElement("Assets/t1.png",64*12,64*2,100), new UIElement("Assets/t2.png",64*12,64*4,200), new UIElement("Assets/t3.png",64*12,64*6,300)];
         
+        var bullets = new Array();
         var stageMatrix = [
             [1, 1, 1, 1, 1, 1, 1, 1, 0, 1],
             [1, 1, 1, 1, 0, 0, 0, 0, 0, 1],
@@ -316,6 +395,15 @@
             
             for(var i=0;i<enemies.length;i++){
                 enemies[i].move();                
+            }
+
+            for (var i = 0; i < bullets.length; i++) {
+                bullets[i].travel();
+            }
+            if (enemies.length === 0) {
+                for (var i = 0; i < bullets.length; i++) {
+                    bullets[i].destroy();
+                }
             }
             renderer.render(stage);
             requestAnimationFrame(animate);
