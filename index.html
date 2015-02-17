@@ -29,7 +29,7 @@
     </style>
     <script>
         // setting up renderer
-        var renderer = new PIXI.WebGLRenderer(920, 640);
+        var renderer = new PIXI.CanvasRenderer(920, 640);
         $("#daGame").append(renderer.view);
         //setting stage
         var stage = new PIXI.Stage(0x97c56e, true);
@@ -219,8 +219,8 @@
         
         }
         //
-        var towers = [new Tower(new PIXI.Sprite(PIXI.Texture.fromImage("Assets/t1.png")), 64 * 4, 64 * 3, 85), new Tower(new PIXI.Sprite(PIXI.Texture.fromImage("Assets/t2.png")), 64 * 7, 64 * 5, 245), new Tower(new PIXI.Sprite(PIXI.Texture.fromImage("Assets/t3.png")), 64 * 6, 64 * 3, 300), new Tower(new PIXI.Sprite(PIXI.Texture.fromImage("Assets/t3.png")), 64 * 6, 64 * 7, 300)];
-
+        //var towers = [new Tower(new PIXI.Sprite(PIXI.Texture.fromImage("Assets/t1.png")), 64 * 4, 64 * 3, 85), new Tower(new PIXI.Sprite(PIXI.Texture.fromImage("Assets/t2.png")), 64 * 7, 64 * 5, 245), new Tower(new PIXI.Sprite(PIXI.Texture.fromImage("Assets/t3.png")), 64 * 6, 64 * 3, 300), new Tower(new PIXI.Sprite(PIXI.Texture.fromImage("Assets/t3.png")), 64 * 6, 64 * 7, 300)];
+        var towers = new Array();
         var uiElements = [new UIElement("Assets/t1.png",64*12,64*2,100), new UIElement("Assets/t2.png",64*12,64*4,200), new UIElement("Assets/t3.png",64*12,64*6,300)];
         
         var stageMatrix = [
