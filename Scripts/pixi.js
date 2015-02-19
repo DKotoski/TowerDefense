@@ -17253,7 +17253,8 @@
     }
  //NEW MY CODE SHOULD NOT BE USED!!!!   
     PIXI.DisplayObjectContainer.prototype.contains = function(child)
-{
+    {
+
     return (this.children.indexOf( child ) !== -1);
 }
 //END OF MY DANGEROUS CODE
