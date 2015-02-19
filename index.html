@@ -33,7 +33,6 @@
         $("#daGame").append(renderer.view);
         //setting stage
         var stage = new PIXI.Stage(0x97c56e, true);
-
         //setting sprites
         //towers
 
@@ -113,7 +112,6 @@
             
         }
         //end tower constructor
-
         // enemy constuctor
         function Enemy(x, y) {
             this.sprite = new PIXI.Sprite(PIXI.Texture.fromImage("Assets/enemy.png"));
@@ -160,7 +158,6 @@
             };
         }
         //end enemy constructor
-
         // UI ELEMENT CONSTRUCTOR
         function UIElement(sprite, x, y, price) {
             this.sprite = new PIXI.Sprite(PIXI.Texture.fromImage(sprite));            
@@ -222,7 +219,6 @@
         
         }
         //END UI CONSTRUCTOR
-
         //BULLET CONSTRUCTOR
         function Bullet(x, y, target, tower) {
             this.traveling = true;
@@ -257,6 +253,11 @@
             this.travel = function () {
                 if(bullet.traveling)
                 {
+					if(bullet.tower.targetIndex ===-1)
+					{
+						bullet.destroy();
+						return;
+					}
                     var dFromT = Math.sqrt((bullet.sprite.position.x - bullet.tower.sprite.position.x) * (bullet.sprite.position.x - bullet.tower.sprite.position.x)+(bullet.sprite.position.y - bullet.tower.sprite.position.y)*(bullet.sprite.position.y - bullet.tower.sprite.position.y))
                     if (dFromT > bullet.tower.range + 50) {
                         bullet.destroy();
@@ -266,12 +267,13 @@
                         bullet.destroy();
                         return;
                     }
-                    if (!bullet.tower.target) {
+                    if (bullet.tower.target==null) {
+						bullet.destroy();
                         return;
                     }
-                    var tan = (bullet.target.y - bullet.y) / (bullet.target.x - bullet.x)
+                    var tan = (bullet.target.sprite.position.y - bullet.y) / (bullet.target.sprite.position.x - bullet.x)
                     var angle = Math.atan(tan);
-                    if (bullet.target.x < bullet.x) angle += 3.14;
+                    if (bullet.target.sprite.position.x < bullet.x) angle += Math.PI;
                     bullet.rotate(angle);
                     if (bullet.target.sprite.position.x < (bullet.x + 2) && bullet.target.sprite.position.x > (bullet.x - 2) && bullet.target.sprite.position.y < (bullet.y + 2) && bullet.target.sprite.position.y > (bullet.y - 2)) {
                         enemies.splice(bullet.tower.targetIndex, 1);
@@ -285,11 +287,9 @@
                         bullet.destroy();                        
                         return;
                     }
-
-                    var moveByY = 4;
-                    var moveByX = 4;
-                    if (bullet.target.sprite.position.y < bullet.y) moveByY *= -1;
-                    if (bullet.target.sprite.position.x < bullet.x) moveByX *= -1;
+					var distance = 4;
+                    var moveByY = distance*Math.sin(angle);
+                    var moveByX = distance*Math.cos(angle);
                     bullet.y += moveByY;
                     bullet.x += moveByX;
                     bullet.setSpriteLocation();
@@ -298,7 +298,6 @@
         }
         //END BULLET CONSTRUCTOR
         var towers = [new Tower(new PIXI.Sprite(PIXI.Texture.fromImage("Assets/t1.png")), 64 * 4, 64 * 3, 85), new Tower(new PIXI.Sprite(PIXI.Texture.fromImage("Assets/t2.png")), 64 * 7, 64 * 5, 245), new Tower(new PIXI.Sprite(PIXI.Texture.fromImage("Assets/t3.png")), 64 * 6, 64 * 3, 300), new Tower(new PIXI.Sprite(PIXI.Texture.fromImage("Assets/t3.png")), 64 * 6, 64 * 7, 300)];
-
         var uiElements = [new UIElement("Assets/t1.png",64*12,64*2,100), new UIElement("Assets/t2.png",64*12,64*4,200), new UIElement("Assets/t3.png",64*12,64*6,300)];
         
         var bullets = new Array();
@@ -313,7 +312,6 @@
             [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
             [1, 1, 1, 1, 1, 1, 1, 1, 0, 1],
             [1, 1, 1, 1, 1, 1, 1, 1, 0, 1]];
-
         var pathMatrix = [
             [[+64, 0], [+64, 0], [+64, 0], [+64, 0], [+64, 0], [+64, 0], [+64, 0], [+65, 0], [0, +10], [-64, 0]],
             [[+64, 0], [+64, 0], [+64, 0], [0, +10], [-10, 0], [-10, 0], [-10, 0], [-10, 0], [-10, 0], [-64, 0]],
@@ -325,7 +323,6 @@
             [[+10, 0], [+10, 0], [+10, 0], [+10, 0], [+10, 0], [+10, 0], [+10, 0], [+10, 0], [0, +10], [-64, 0]],
             [[+64, 0], [+64, 0], [+64, 0], [+64, 0], [+64, 0], [+64, 0], [+64, 0], [+64, 0], [0, +10], [-64, 0]],
             [[+64, 0], [+64, 0], [+64, 0], [+64, 0], [+64, 0], [+64, 0], [+64, 0], [+64, 0], [0, +10], [-64, 0]]];
-
         for (var i = 0; i < 10; i++) {
             for (var j = 0; j < 10; j++) {
                 var texture;
@@ -342,7 +339,6 @@
         for (var i = 0; i < towers.length; i++) {
             stage.addChild(towers[i].sprite);
         }
-
         for(var i =0;i<uiElements.length;i++){
             stage.addChild(uiElements[i].sprite);
         }
@@ -360,7 +356,7 @@
         
             
         var health = 100;
-        var money = 200;
+        var money = 500;
         
         
         var text = new PIXI.Text(health, { font: "50px Arial", fill: "red" });
@@ -396,7 +392,6 @@
             for(var i=0;i<enemies.length;i++){
                 enemies[i].move();                
             }
-
             for (var i = 0; i < bullets.length; i++) {
                 bullets[i].travel();
             }
