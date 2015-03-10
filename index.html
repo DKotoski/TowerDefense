@@ -2,6 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>Cinderella</title>
+    <script src="Scripts/Howler.js"></script>
     <script src="Scripts/pixi.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <style>
@@ -27,6 +28,14 @@
             background:bisque;
         }
     </style>
+    <script>
+        var soundTrack = new Howl({
+            urls: ['Assets/Nils_505_Feske_-_34_-_Tsrups.mp3'], autoplay: true,
+            loop: true
+        });
+        var shoot = new Howl({ urls: ['Assets/Shoot.mp3'] });
+        var death = new Howl({ urls: ['Assets/Death.mp3'] });
+    </script>
     <button id="newWave">new Wave</button>
     <script src="Scripts/Game.js"></script>
 </body>
