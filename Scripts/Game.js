@@ -110,10 +110,10 @@ function Enemy(x, y, hp, speed) {
     this.move = function () {
         if(enemy.sprite.position.y>=640){
             health--;
-            enemies.pop();
-            if(stage.contains(enemy.sprite)){
+            if (stage.contains(enemy.sprite)) {
                 stage.removeChild(enemy.sprite);
             }
+            enemies.pop();            
             return;
         }
         if(enemy.sprite.position.y<64)
