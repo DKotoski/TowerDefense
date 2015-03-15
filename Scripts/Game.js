@@ -9,9 +9,9 @@ var stage = new PIXI.Stage(0x97c56e, true);
 //setting sprites
 //towers
 //tower constructor
-function Tower(sprite, x, y, shootSpeed) {
+function Tower(sprite, x, y, shootSpeed,range,damage) {
     this.shootSpeed = shootSpeed;
-    this.range = 150;
+    this.range = range;
     this.sprite = sprite;
     this.x = x;
     this.y = y;
@@ -21,7 +21,7 @@ function Tower(sprite, x, y, shootSpeed) {
     this.sprite.pivot.y = 32;
     this.target=null;
     this.targetIndex=-1;
-    this.damage = 50;
+    this.damage = damage;
     var tower = this;
     this.toSpriteCoordinates = function (x, y) {
         tower.sprite.position.x = x - 32;
@@ -67,22 +67,14 @@ function Tower(sprite, x, y, shootSpeed) {
         var bullet = new Bullet(tower.sprite.position.x, tower.sprite.position.y, tower.target,tower);
         bullets.push(bullet);
         stage.addChild(bullet.sprite);
-        //console.log(tower.shootSpeed);
-        /* enemies.splice(tower.targetIndex,1);
-            if(stage.contains(toRemove)){
-                stage.removeChild(toRemove);
-            }
-            //console.log(tower.targetIndex);
-            tower.target=null;
-            tower.targetIndex = -1;
-            money += 10;*/
-            return;                    
+        return;                    
     }
             
 }
 //end tower constructor
 // enemy constuctor
-function Enemy(x, y, hp, speed) {
+function Enemy(x, y, hp, speed,id) {
+    this.id=id;
     this.traveled = y;
     this.sprite = new PIXI.Sprite(PIXI.Texture.fromImage("Assets/enemy.png"));
     this.x = x;
@@ -110,10 +102,7 @@ function Enemy(x, y, hp, speed) {
     this.move = function () {
         if(enemy.sprite.position.y>=640){
             health--;
-            if (stage.contains(enemy.sprite)) {
-                stage.removeChild(enemy.sprite);
-            }
-            enemies.pop();            
+            enemy.Die();            
             return;
         }
         if(enemy.sprite.position.y<64)
@@ -131,10 +120,7 @@ function Enemy(x, y, hp, speed) {
     this.isDead = function (bullet) {
         enemy.hp -= bullet.tower.damage;
         if (enemy.hp <= 0) {
-            if (stage.contains(bullet.tower.target.sprite)) {
-                stage.removeChild(bullet.tower.target.sprite);
-            }
-            enemies.splice(bullet.tower.targetIndex, 1);
+            enemy.Die();
             money += 10;
             death.play();
         }
@@ -143,12 +129,20 @@ function Enemy(x, y, hp, speed) {
         if (stage.contains(enemy.sprite)) {
             stage.removeChild(enemy.sprite);
         }
+        for(var i=0;i<enemies.length;i++){
+            if(enemies[i].id==enemy.id){
+                enemies.splice(i,1);
+            }
+        }
     };
 }
 //end enemy constructor
 // UI ELEMENT CONSTRUCTOR
-function UIElement(sprite, x, y, price, shootSpeed) {
-    this.sprite = new PIXI.Sprite(PIXI.Texture.fromImage(sprite));            
+function UIElement(sprite, x, y, price, shootSpeed,range,damage) {
+    this.text = new PIXI.Text(price, { font: "20px Arial", fill: "red" });
+    this.sprite = new PIXI.Sprite(PIXI.Texture.fromImage(sprite));   
+    this.range = range;         
+    this.damage = damage;
     this.x = x;
     this.y = y;
     this.shootSpeed = shootSpeed;
@@ -159,6 +153,8 @@ function UIElement(sprite, x, y, price, shootSpeed) {
     this.spriteLocation = sprite;
     this.price = price;
     var element = this;
+    element.text.position.y=element.y + 10;
+    element.text.position.x= element.x - 50;
     this.dim = function () {
         element.sprite.alpha = 0.5;
         element.sprite.interactive = false;
@@ -182,12 +178,13 @@ function UIElement(sprite, x, y, price, shootSpeed) {
             if (stageMatrix[Math.floor(newPosition.y / 64)][Math.floor(newPosition.x / 64)] === 1) {
                 var tmpX = (Math.floor(newPosition.x / 64) + 1) * 64;
                 var tmpY = (Math.floor(newPosition.y / 64) + 1) * 64;
-                var t = new Tower(new PIXI.Sprite(PIXI.Texture.fromImage(element.spriteLocation)), tmpX, tmpY, element.shootSpeed);
+                var t = new Tower(new PIXI.Sprite(PIXI.Texture.fromImage(element.spriteLocation)), tmpX, tmpY, element.shootSpeed, element.range, element.damage);
                 towers.push(t);
                 stage.addChild(t.sprite);
                 money -= element.price;
                 this.position.x = x - 32;
                 this.position.y = y - 32;
+                stageMatrix[Math.floor(newPosition.y / 64)][Math.floor(newPosition.x / 64)]=1;
             } else {
                 this.position.x = x - 32;
                 this.position.y = y - 32;
@@ -214,7 +211,7 @@ function Bullet(x, y, target, tower) {
     this.tower = tower;
     this.x = x;
     this.y = y;
-    this.target = target;
+    this.target = tower.target;
     this.sprite = new PIXI.Sprite(PIXI.Texture.fromImage("Assets/bullet.png"));
     var bullet = this;
     this.rotate = function (angle) {
@@ -241,23 +238,21 @@ function Bullet(x, y, target, tower) {
     }
     this.travel = function () {
         if (bullet.traveling) {
-            if (bullet.tower.targetIndex === -1) {
-                bullet.destroy();
-                return;
-            }
+            //if (bullet.tower.targetIndex === -1) {
+            //    bullet.destroy();
+            //    return;
+            //}
             var dFromT = Math.sqrt((bullet.sprite.position.x - bullet.tower.sprite.position.x) * (bullet.sprite.position.x - bullet.tower.sprite.position.x) + (bullet.sprite.position.y - bullet.tower.sprite.position.y) * (bullet.sprite.position.y - bullet.tower.sprite.position.y))
             if (dFromT > bullet.tower.range + 50) {
                 bullet.destroy();
                 return;
             }
-            if (bullets.indexOf(bullet) == -1) {
-                bullet.destroy();
-                return;
-            }
-            if (bullet.tower.target == null) {
-                bullet.destroy();
-                return;
-            }
+            //if (bullet.tower.target == null) {
+            //    bullet.destroy();
+            //    return;
+            //}
+            bullet.target=bullet.tower.target;
+            if(bullet.target===null) return;
             var tan = (bullet.target.sprite.position.y - bullet.y) / (bullet.target.sprite.position.x - bullet.x)
             var angle = Math.atan(tan);
             if (bullet.target.sprite.position.x < bullet.x) angle += Math.PI;
@@ -282,7 +277,7 @@ function Bullet(x, y, target, tower) {
 //END BULLET CONSTRUCTOR
 //var towers = [new Tower(new PIXI.Sprite(PIXI.Texture.fromImage("Assets/t1.png")), 64 * 4, 64 * 3, 85), new Tower(new PIXI.Sprite(PIXI.Texture.fromImage("Assets/t2.png")), 64 * 7, 64 * 5, 245), new Tower(new PIXI.Sprite(PIXI.Texture.fromImage("Assets/t3.png")), 64 * 6, 64 * 3, 300), new Tower(new PIXI.Sprite(PIXI.Texture.fromImage("Assets/t3.png")), 64 * 6, 64 * 7, 300)];
 var towers = new Array();
-var uiElements = [new UIElement("Assets/t1.png",64*12,64*2,100,100), new UIElement("Assets/t2.png",64*12,64*4,200,150), new UIElement("Assets/t3.png",64*12,64*6,300,130)];
+var uiElements = [new UIElement("Assets/t1.png",64*12,64*2,100,100,150,100), new UIElement("Assets/t2.png",64*12,64*4,150,75,150,60), new UIElement("Assets/t3.png",64*12,64*6,500,300,1000,1000)];
 var bullets = new Array();
 
 //help matrixes
@@ -319,26 +314,28 @@ for (var i = 0; i < towers.length; i++) {
 }
 for(var i =0;i<uiElements.length;i++){
     stage.addChild(uiElements[i].sprite);
+    stage.addChild(uiElements[i].text);
 }
         
         
         
 var enemies = new Array();
 
+//enemy settings
 var enemyHP = 40;
 var enemySpeed = 11;
 var enemiesN = 6;
-       
+var enemyID=0;
         
 //ui elements
 var health = 100;
-var money = 10000;
+var money = 500;
         
     
-var text = new PIXI.Text(health, { font: "50px Arial", fill: "red" });
+var text = new PIXI.Text(health, { font: "50px MarioKart", fill: "red" });
 text.position.x = 64 * 10;
 stage.addChild(text);
-var textMoney = new PIXI.Text(money, { font: "50px Arial", fill: "red" });
+var textMoney = new PIXI.Text(money, { font: "50px MarioKart", fill: "red" });
 textMoney.position.x = 64 * 10;
 textMoney.position.y = 64 * 8;
 stage.addChild(textMoney);
@@ -346,13 +343,16 @@ stage.addChild(textMoney);
 var timer = 0;
 
 $("#newWave").on("click", function () {
-    enemyHP += 10;
-    enemySpeed *= 0.95;
-    enemiesN += 2;
-    for (var i = 0; i < enemiesN; i++) {
-        var enemy = new Enemy(64 * 9, (64 - (20 * enemiesN)) + (i * 20), enemyHP, enemySpeed);
-        enemies.push(enemy);
-        stage.addChild(enemy.sprite);
+    if(health>0){
+        enemyHP += 10;
+        enemySpeed *= 0.95;
+        enemiesN += 2;
+        for (var i = 0; i < enemiesN; i++) {
+            var enemy = new Enemy(64 * 9, (64 - (20 * enemiesN)) + (i * 20), enemyHP, enemySpeed,enemyID);
+            enemies.push(enemy);
+            stage.addChild(enemy.sprite);
+            enemyID++;
+        }
     }
 });
 
@@ -396,7 +396,7 @@ function animate() {
         for (var i = 0; i < enemies.length; i++) {
             enemies[i].Die();
         }
-        enemies = new Array();
+        health = 0;
     }
     renderer.render(stage);
     requestAnimationFrame(animate);
