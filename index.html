@@ -12,11 +12,15 @@
             background-color: #000000;
             overflow: hidden;
         }
+        @font-face {
+            font-family: "bitFont";
+            src: url('Assets/Squares Bold Free.otf');
+        }
     </style>
     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=yes">
 </head>
 <body>
-    <div id="daGame">    </div>
+    <div id="daGame" style="font-family:bitFont;">    </div>
     <style>
         body{
             text-align: center;
@@ -36,15 +40,6 @@
         var shoot = new Howl({ urls: ['Assets/Shoot.mp3'] });
         var death = new Howl({ urls: ['Assets/Death.mp3'] });
     </script>
-    
-
-    
-    <style type="text/css">
-      @font-face {
-        font-family:"My Font";
-        src:url("Assets/Mario-Kart-DS.woff") format("woff");
-      }
-</style>
     <button id="newWave">new Wave</button>
     <script src="Scripts/Game.js"></script>
 </body>

@@ -4,7 +4,11 @@
 var renderer = new PIXI.WebGLRenderer(920, 640);
 $("#daGame").append(renderer.view);
 //setting stage
-var stage = new PIXI.Stage(0x97c56e, true);
+var stage = new PIXI.Stage(0x6aabad, true);
+var uiSide = new PIXI.Sprite(PIXI.Texture.fromImage("Assets/uiSide.png"));
+uiSide.position.x = 640;
+uiSide.position.y = 0;
+stage.addChild(uiSide);
 //setting music
 //setting sprites
 //towers
@@ -138,8 +142,8 @@ function Enemy(x, y, hp, speed,id) {
 }
 //end enemy constructor
 // UI ELEMENT CONSTRUCTOR
-function UIElement(sprite, x, y, price, shootSpeed,range,damage) {
-    this.text = new PIXI.Text(price, { font: "20px Arial", fill: "red" });
+function UIElement(sprite, x, y, price, shootSpeed,range,damage,tooltip) {
+    this.text = new PIXI.Text(price, { font: "20px bitFont", fill: "red" });
     this.sprite = new PIXI.Sprite(PIXI.Texture.fromImage(sprite));   
     this.range = range;         
     this.damage = damage;
@@ -152,9 +156,12 @@ function UIElement(sprite, x, y, price, shootSpeed,range,damage) {
     this.sprite.pivot.y = 32;
     this.spriteLocation = sprite;
     this.price = price;
+    this.tooltip = new PIXI.Text(tooltip, { font: "18px bitFont", fill: "red" });
     var element = this;
-    element.text.position.y=element.y + 10;
-    element.text.position.x= element.x - 50;
+    element.text.position.y=element.y;
+    element.text.position.x = element.x - 50;
+    element.tooltip.position.y = element.sprite.position.y;
+    element.tooltip.position.x = element.sprite.position.x+55;
     this.dim = function () {
         element.sprite.alpha = 0.5;
         element.sprite.interactive = false;
@@ -277,7 +284,7 @@ function Bullet(x, y, target, tower) {
 //END BULLET CONSTRUCTOR
 //var towers = [new Tower(new PIXI.Sprite(PIXI.Texture.fromImage("Assets/t1.png")), 64 * 4, 64 * 3, 85), new Tower(new PIXI.Sprite(PIXI.Texture.fromImage("Assets/t2.png")), 64 * 7, 64 * 5, 245), new Tower(new PIXI.Sprite(PIXI.Texture.fromImage("Assets/t3.png")), 64 * 6, 64 * 3, 300), new Tower(new PIXI.Sprite(PIXI.Texture.fromImage("Assets/t3.png")), 64 * 6, 64 * 7, 300)];
 var towers = new Array();
-var uiElements = [new UIElement("Assets/t1.png",64*12,64*2,100,100,150,100), new UIElement("Assets/t2.png",64*12,64*4,150,75,150,60), new UIElement("Assets/t3.png",64*12,64*6,500,300,1000,1000)];
+var uiElements = [new UIElement("Assets/t1.png", 720, 170, 100, 100, 150, 100, "A somewhat slower\nbut powerfull tower!"), new UIElement("Assets/t2.png", 720, 280, 150, 75, 150, 60, "A fast mashinegun\nbut lacks the power!"), new UIElement("Assets/t3.png", 720, 390, 500, 300, 1000, 1000, "The sniper\nKills instant from far!")];
 var bullets = new Array();
 
 //help matrixes
@@ -315,6 +322,7 @@ for (var i = 0; i < towers.length; i++) {
 for(var i =0;i<uiElements.length;i++){
     stage.addChild(uiElements[i].sprite);
     stage.addChild(uiElements[i].text);
+    stage.addChild(uiElements[i].tooltip);
 }
         
         
@@ -332,12 +340,13 @@ var health = 100;
 var money = 500;
         
     
-var text = new PIXI.Text(health, { font: "50px MarioKart", fill: "red" });
-text.position.x = 64 * 10;
+var text = new PIXI.Text(health, { font: "30px bitFont", fill: "red" });
+text.position.x = 64 * 10 + 30;
+text.position.y = 10;
 stage.addChild(text);
-var textMoney = new PIXI.Text(money, { font: "50px MarioKart", fill: "red" });
-textMoney.position.x = 64 * 10;
-textMoney.position.y = 64 * 8;
+var textMoney = new PIXI.Text(money, { font: "30px bitFont", fill: "red" });
+textMoney.position.x = 64 * 10 +30;
+textMoney.position.y = 50;
 stage.addChild(textMoney);
 //ui elements end
 var timer = 0;
