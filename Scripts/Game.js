@@ -143,7 +143,7 @@ function Enemy(x, y, hp, speed,id) {
 //end enemy constructor
 // UI ELEMENT CONSTRUCTOR
 function UIElement(sprite, x, y, price, shootSpeed,range,damage,tooltip) {
-    this.text = new PIXI.Text(price, { font: "20px bitFont", fill: "red" });
+    this.text = new PIXI.Text(price, { font: "bold 20px Galindo", fill: "red" });
     this.sprite = new PIXI.Sprite(PIXI.Texture.fromImage(sprite));   
     this.range = range;         
     this.damage = damage;
@@ -156,7 +156,7 @@ function UIElement(sprite, x, y, price, shootSpeed,range,damage,tooltip) {
     this.sprite.pivot.y = 32;
     this.spriteLocation = sprite;
     this.price = price;
-    this.tooltip = new PIXI.Text(tooltip, { font: "18px bitFont", fill: "red" });
+    this.tooltip = new PIXI.Text(tooltip, { font: "bold 18px Galindo", fill: "red" });
     var element = this;
     element.text.position.y=element.y;
     element.text.position.x = element.x - 50;
@@ -250,7 +250,7 @@ function Bullet(x, y, target, tower) {
             //    return;
             //}
             var dFromT = Math.sqrt((bullet.sprite.position.x - bullet.tower.sprite.position.x) * (bullet.sprite.position.x - bullet.tower.sprite.position.x) + (bullet.sprite.position.y - bullet.tower.sprite.position.y) * (bullet.sprite.position.y - bullet.tower.sprite.position.y))
-            if (dFromT > bullet.tower.range + 50) {
+            if (dFromT > bullet.tower.range + 200) {
                 bullet.destroy();
                 return;
             }
@@ -340,11 +340,11 @@ var health = 100;
 var money = 500;
         
     
-var text = new PIXI.Text(health, { font: "30px bitFont", fill: "red" });
+var text = new PIXI.Text(health, { font: "30px Galindo", fill: "red" });
 text.position.x = 64 * 10 + 30;
 text.position.y = 10;
 stage.addChild(text);
-var textMoney = new PIXI.Text(money, { font: "30px bitFont", fill: "red" });
+var textMoney = new PIXI.Text(money, { font: "30px Galindo", fill: "red" });
 textMoney.position.x = 64 * 10 +30;
 textMoney.position.y = 50;
 stage.addChild(textMoney);
