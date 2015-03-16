@@ -25,6 +25,10 @@
 <body>
     <div style="width: 920px; text-align: center;" >
         <div id="menu" data-role="page" data-theme="b">
+            <button name="volumeBtn" type="button" class="btn btn-default" aria-label="Left Align" style="color:black; width:40px; float:left;">
+                <span class="glyphicon glyphicon-volume-off" aria-hidden="true"></span>
+            </button>
+
             <div style="background-image: url('Assets/background.png'); background-repeat: no-repeat; width:920px; min-height: 640px; margin: auto;">
             <div id="content" data-role="content" style="width:500px; min-height:640px; margin:auto;">
                 <a href="#daGame" data-role="button" data-transition="fade" style="margin-top: 450px;"> PLAY! </a>
@@ -33,8 +37,12 @@
             </div>
             </div>
         </div>
-        <div id="daGame" style="font-family:'Galindo'; margin: 0 auto;" data-role="page" data-theme="b">
 
+
+        <div id="daGame" style="font-family:'Galindo'; margin: 0 auto;" data-role="page" data-theme="b">
+            <button name="volumeBtn" type="button" class="btn btn-default" aria-label="Left Align" style="color: black; width: 40px; float: left;">
+                <span class="glyphicon glyphicon-volume-off" aria-hidden="true"></span>
+            </button>
             <div id="inputPanel" class="panel panel-default" style="position: fixed; top: 40%; left: 40%; width: 350px">
                 <div class="panel-heading">Submit your Highscore</div>
                 <div class="panel-body">
@@ -47,7 +55,12 @@
                 </div>                        
             </div>
         </div>
+
+
         <div id="highscore" style="font-family: 'Galindo'" data-role="page" data-theme="b">
+            <button name="volumeBtn" type="button" class="btn btn-default" aria-label="Left Align" style="color: black; width: 40px; float: left;">
+                <span class="glyphicon glyphicon-volume-off" aria-hidden="true"></span>
+            </button>
             <div class="panel panel-default" style="width:640px; min-height:640px; margin:auto; color: black; margin-top:10px;">
                 <div class="panel-heading">HighScores!</div>
                 <table class="table">
@@ -58,8 +71,7 @@
                             <td>Score</td>
                         </tr>
                     </thead>
-                    <tbody>
-                        
+                    <tbody>                        
                     </tbody>
                 </table>
                 <div class="ui-grid-a" style="width:400px; margin:auto; margin-top:50px;">
@@ -69,7 +81,12 @@
             </div>
             
         </div>
+
+
         <div id="howto" style="font-family: 'Galindo'" data-role="page" data-theme="b">
+            <button name="volumeBtn" type="button" class="btn btn-default" aria-label="Left Align" style="color: black; width: 40px; float: left;">
+                <span class="glyphicon glyphicon-volume-off" aria-hidden="true"></span>
+            </button>
             <div style="background-image: url('Assets/howTo.png'); background-repeat: no-repeat; width:920px; min-height: 640px; margin: auto;">
                 <div id="content" data-role="content" style="width:300px; min-height:640px; margin-left:50px;">
                     <a href="#daGame" data-role="button" data-transition="fade" style="margin-top: 500px;"> PLAY! </a>
@@ -86,14 +103,7 @@
             margin: auto;
         }
     </style>
-    <script>
-        var soundTrack = new Howl({
-            urls: ['Assets/Nils_505_Feske_-_34_-_Tsrups.mp3'], autoplay: true,
-            loop: true
-        });
-        var shoot = new Howl({ urls: ['Assets/Shoot.mp3'] });
-        var death = new Howl({ urls: ['Assets/Death.mp3'] });
-    </script>
+    <script src="Scripts/UIScripts.js"></script>
     <script src="Scripts/Game.js"></script>
     <script src="Scripts/HighScore.js"></script>
 </body>

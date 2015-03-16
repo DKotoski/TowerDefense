@@ -447,32 +447,3 @@ function animate() {
 }
 //end animation
 
-$("#inputPanel").fadeOut();
-function lost() {
-    $("#points").text("You have won " + score + " points! Well played");
-    $("#inputPanel").fadeIn();
-}
-
-function resetGame() {
-    //enemy settings
-    enemyHP = 40;
-    enemySpeed = 11;
-    enemiesN = 6;
-    enemyID = 0;
-
-    //ui elements
-    health = 100;
-    money = 500;
-    score = 0;
-}
-
-$("#submit").on("click", function () {
-    addNewScore($("#name").val(), score);
-    resetGame();
-    $("#inputPanel").fadeOut();
-});
-
-$("#newGame").on("click", function () {
-    $("#inputPanel").fadeOut();
-    resetGame();
-});
