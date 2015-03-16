@@ -9,6 +9,9 @@
     <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.js"></script>
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css" />
     <link href='http://fonts.googleapis.com/css?family=Galindo&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
     <style>
         body {
             margin: 0;
@@ -30,8 +33,42 @@
             </div>
             </div>
         </div>
-        <div id="daGame" style="font-family:'Galindo'; margin: 0 auto;" data-role="page" data-theme="b">    </div>
-        <div id="highscore" style="font-family: 'Galindo'" data-role="page" data-theme="b"></div>
+        <div id="daGame" style="font-family:'Galindo'; margin: 0 auto;" data-role="page" data-theme="b">
+
+            <div id="inputPanel" class="panel panel-default" style="position: fixed; top: 40%; left: 40%; width: 350px">
+                <div class="panel-heading">Submit your Highscore</div>
+                <div class="panel-body">
+                    <p id="points" style="color:black;"></p>
+                    <input id="name" type="text" class="form-control" placeholder="Your Name :)" aria-describedby="basic-addon2">
+                    <div class="ui-grid-a">
+                        <a href="#highscore" data-role="button" data-transition="fade" id="submit" class="ui-block-a">Submit</a>
+                        <button id="newGame" class="ui-block-b">New Game!</button>
+                    </div>
+                </div>                        
+            </div>
+        </div>
+        <div id="highscore" style="font-family: 'Galindo'" data-role="page" data-theme="b">
+            <div class="panel panel-default" style="width:640px; min-height:640px; margin:auto; color: black; margin-top:10px;">
+                <div class="panel-heading">HighScores!</div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <td>#</td>
+                            <td>Name</td>
+                            <td>Score</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                    </tbody>
+                </table>
+                <div class="ui-grid-a" style="width:400px; margin:auto; margin-top:50px;">
+                    <a href="#menu" data-role="button" data-transition="fade" class="ui-block-a" style="padding:10px;">To Menu</a>
+                    <a href="#daGame" data-role="button" data-transition="fade" class="ui-block-b" style="padding: 10px;">Play Again?</a>
+                </div>
+            </div>
+            
+        </div>
         <div id="howto" style="font-family: 'Galindo'" data-role="page" data-theme="b">
             <div style="background-image: url('Assets/howTo.png'); background-repeat: no-repeat; width:920px; min-height: 640px; margin: auto;">
                 <div id="content" data-role="content" style="width:300px; min-height:640px; margin-left:50px;">
@@ -41,10 +78,10 @@
             </div>
         </div>
     </div>
-         <style>
-             body{
-                 text-align: center;
-             }
+    <style>
+        body{
+            text-align: center;
+        }
         canvas{
             margin: auto;
         }
@@ -58,5 +95,6 @@
         var death = new Howl({ urls: ['Assets/Death.mp3'] });
     </script>
     <script src="Scripts/Game.js"></script>
+    <script src="Scripts/HighScore.js"></script>
 </body>
 </html>

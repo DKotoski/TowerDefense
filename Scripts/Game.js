@@ -1,5 +1,3 @@
-/// <reference path="Scripts/pixi.js" />
-/// <reference path="Scripts/Howler.js" />
 // setting up renderer
 var renderer = new PIXI.WebGLRenderer(920, 640);
 $("#daGame").append(renderer.view);
@@ -9,7 +7,6 @@ var uiSide = new PIXI.Sprite(PIXI.Texture.fromImage("Assets/uiSide.png"));
 uiSide.position.x = 640;
 uiSide.position.y = 0;
 stage.addChild(uiSide);
-//setting music
 //setting sprites
 //towers
 //tower constructor
@@ -422,6 +419,7 @@ function animate() {
             enemies[i].Die();
         }
         health = 0;
+        lost();
     }
 
     if (enemies.length != 0) {
@@ -431,11 +429,15 @@ function animate() {
             newWave.sprite.alpha = 1;
         }
         else {
-
             newWave.sprite.interactive = false;
             newWave.sprite.alpha = 0.5;
         }
-    } else if(health!=0){
+    } 
+    if (health === 0) {
+        newWave.sprite.interactive = false;
+        newWave.sprite.alpha = 0.5;
+    }
+    if (enemies.length === 0) {
         newWave.sprite.interactive = true;
         newWave.sprite.alpha = 1;
     }
@@ -444,3 +446,33 @@ function animate() {
     requestAnimationFrame(animate);
 }
 //end animation
+
+$("#inputPanel").fadeOut();
+function lost() {
+    $("#points").text("You have won " + score + " points! Well played");
+    $("#inputPanel").fadeIn();
+}
+
+function resetGame() {
+    //enemy settings
+    enemyHP = 40;
+    enemySpeed = 11;
+    enemiesN = 6;
+    enemyID = 0;
+
+    //ui elements
+    health = 100;
+    money = 500;
+    score = 0;
+}
+
+$("#submit").on("click", function () {
+    addNewScore($("#name").val(), score);
+    resetGame();
+    $("#inputPanel").fadeOut();
+});
+
+$("#newGame").on("click", function () {
+    $("#inputPanel").fadeOut();
+    resetGame();
+});
