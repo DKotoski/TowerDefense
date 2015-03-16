@@ -190,7 +190,7 @@ function UIElement(sprite, x, y, price, shootSpeed,range,damage,tooltip) {
                 money -= element.price;
                 this.position.x = x - 32;
                 this.position.y = y - 32;
-                stageMatrix[Math.floor(newPosition.y / 64)][Math.floor(newPosition.x / 64)]=1;
+                stageMatrix[Math.floor(newPosition.y / 64)][Math.floor(newPosition.x / 64)]=0;
             } else {
                 this.position.x = x - 32;
                 this.position.y = y - 32;
@@ -430,10 +430,16 @@ function animate() {
             newWave.sprite.interactive = true;
             newWave.sprite.alpha = 1;
         }
+        else {
+
+            newWave.sprite.interactive = false;
+            newWave.sprite.alpha = 0.5;
+        }
     } else if(health!=0){
         newWave.sprite.interactive = true;
         newWave.sprite.alpha = 1;
     }
+    
     renderer.render(stage);
     requestAnimationFrame(animate);
 }
