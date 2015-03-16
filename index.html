@@ -5,6 +5,9 @@
     <script src="Scripts/Howler.js"></script>
     <script src="Scripts/pixi.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.css" />
+    <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.js"></script>
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css" />
     <link href='http://fonts.googleapis.com/css?family=Galindo&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
     <style>
         body {
@@ -17,16 +20,25 @@
     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=yes">
 </head>
 <body>
-    <div id="daGame" style="font-family:'Galindo';">    </div>
-    <style>
-        body{
-            text-align: center;
-            background: blanchedalmond;
-        }
-        #daGame{
+    <div style="width: 920px; text-align: center;" >
+        <div id="menu" data-role="page" data-theme="b">
+            <div style="background-image: url('Assets/background.png'); background-repeat: no-repeat; width:920px; min-height: 640px; margin: auto;">
+            <div id="content" data-role="content" style="width:500px; min-height:640px; margin:auto;">
+                <a href="#daGame" data-role="button" data-transition="fade" style="margin-top: 450px;"> PLAY! </a>
+                <a href="#howto" data-role="button" data-transition="fade" style="margin-top: 10px;"> HOW TO PLAY!? </a>
+                <a href="#highscore" data-role="button" data-transition="fade" style="margin-top: 10px;"> HIGHSCORE :)</a>
+            </div>
+            </div>
+        </div>
+        <div id="daGame" style="font-family:'Galindo'; margin: 0 auto;" data-role="page" data-theme="b">    </div>
+        <div id="highscore" style="font-family: 'Galindo'" data-role="page" data-theme="b"></div>
+    </div>
+         <style>
+             body{
+                 text-align: center;
+             }
+        canvas{
             margin: auto;
-            width:920px;
-            background:bisque;
         }
     </style>
     <script>
