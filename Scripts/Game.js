@@ -53,7 +53,6 @@ function Tower(sprite, x, y, shootSpeed,range,damage) {
             if(!stage.contains(tower.target.sprite)){
                 tower.target=null;
                 tower.targetIndex = -1;
-                //console.log("vleze");
                 return;
             }            
                     
@@ -104,7 +103,6 @@ function Enemy(x, y, hp, speed,id) {
         this.fromSpriteCoordinates(x, y);
     };
     this.move = function () {
-        console.log(enemy.traveled);
         if(enemy.sprite.position.y>=640){
             health--;
             enemy.Die();            
@@ -334,12 +332,6 @@ for (var i = 0; i < uiElements.length; i++) {
 }
 
 
-//testcase
-var enemi = new Enemy(64 * 9, (64 - (20 * enemiesN)) + (i * 20), enemyHP, enemySpeed, enemyID);
-enemies.push(enemi);
-stage.addChild(enemi.sprite);
-
-//
 
 function UIWave() {
     this.sprite = new PIXI.Sprite(PIXI.Texture.fromImage("Assets/newWave.png"));
@@ -380,26 +372,13 @@ var textMoney = new PIXI.Text(money, { font: "30px Galindo", fill: "#d6c069" });
 textMoney.position.x = 64 * 10 +30;
 textMoney.position.y = 50;
 stage.addChild(textMoney);
-var scoreText = new PIXI.Text(score, { font: "50 px Galindo", fill: "#d6c069" });
+var scoreText = new PIXI.Text(score, { font: "35px Galindo", fill: "#d6c069" });
 scoreText.position.x = 64 * 10 + 20;
-scoreText.position.y = 460;
+scoreText.position.y = 465;
 stage.addChild(scoreText);
 //ui elements end
 var timer = 0;
 
-$("#newWave").on("click", function () {
-    if(health>0){
-        enemyHP += 10;
-        enemySpeed *= 0.95;
-        enemiesN += 2;
-        for (var i = 0; i < enemiesN; i++) {
-            var enemy = new Enemy(64 * 9, (64 - (20 * enemiesN)) + (i * 20), enemyHP, enemySpeed,enemyID);
-            enemies.push(enemy);
-            stage.addChild(enemy.sprite);
-            enemyID++;
-        }
-    }
-});
 
 
 //the animation function
